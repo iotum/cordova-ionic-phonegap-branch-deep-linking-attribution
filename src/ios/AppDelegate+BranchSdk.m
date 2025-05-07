@@ -1,5 +1,5 @@
 #import "AppDelegate.h"
-
+#import "AppDelegate+APPAppEvent.h"
 #import "BranchNPM.h"
 
 #ifdef BRANCH_NPM
@@ -11,13 +11,15 @@
 // Provides Ionic Capacitor compatibility
 #import <Cordova/CDVPlugin.h>
 
-@interface AppDelegate (BranchSDK)
-
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler;
-
-@end
-
 @implementation AppDelegate (BranchSDK)
+
+- (void)pluginInitialize {
+  [[NSNotificationCenter defaultCenter] 
+    addObserver:self 
+    selector:@selector(branchContinueUserActivityHandler:) 
+    name:UIApplicationContinueUserActivity object:nil
+  ];
+}
 
 // Respond to URI scheme links
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
@@ -32,7 +34,8 @@
 }
 
 // Respond to Universal Links
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *restorableObjects))restorationHandler {
+- (void) branchContinueUserActivityHandler:(NSNotification*)notification {
+  NSUserActivity* userActivity = notification.object;
   if (![[Branch getInstance] continueUserActivity:userActivity]) {
     // send unhandled URL to notification
     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {

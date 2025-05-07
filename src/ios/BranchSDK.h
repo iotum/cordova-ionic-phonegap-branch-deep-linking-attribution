@@ -13,10 +13,11 @@
 #import <BranchSDK/BranchLinkProperties.h>
 #import <BranchSDK/BranchUniversalObject.h>
 #endif
-
+#import "APPAppEventDelegate.h"
+#import <Cordova/CDVPlugin.h>
 #import <Cordova/CDV.h>
 
-@interface BranchSDK : CDVPlugin
+@interface BranchSDK : CDVPlugin <APPAppEventDelegate>
 
 @property (copy) NSString *canonicalIdentifier;
 @property (copy) NSString *title;

@@ -68,6 +68,8 @@ SOFTWARE.
 
   <!-- iOS -->
   <platform name="ios">
+      <!-- Allow "swizzling" the AppDelegate for the singleton UIApplication continueUserActivity handler -->
+      <dependency id="cordova-plugin-ios-app-delegate-events" />
       <plugins-plist key="BranchSDK" string="BranchSDK" />
 
       <config-file target="config.xml" parent="/*">
