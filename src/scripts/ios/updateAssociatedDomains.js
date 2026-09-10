@@ -32,16 +32,14 @@
   // get the xcode .entitlements and provisioning profile .plist
   function getEntitlementFiles(preferences) {
     const files = [];
+    // Cordova iOS 8+ names the app project folder "App" instead of after config.xml's <name>
+    const xcodeCordovaProj =
+      preferences.iosXcodeCordovaProj ||
+      path.join(preferences.projectRoot, "platforms", "ios", preferences.projectName);
 
     for (let i = 0; i < BUILD_TYPES.length; i++) {
       const buildType = BUILD_TYPES[i];
-      const plist = path.join(
-        preferences.projectRoot,
-        "platforms",
-        "ios",
-        preferences.projectName,
-        `Entitlements-${buildType}.plist`
-      );
+      const plist = path.join(xcodeCordovaProj, `Entitlements-${buildType}.plist`);
       files.push(plist);
     }
 

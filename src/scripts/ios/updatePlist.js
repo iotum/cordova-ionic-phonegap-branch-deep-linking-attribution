@@ -2,6 +2,7 @@
   // properties
 
   const fs = require("fs");
+  const path = require("path");
   const plist = require("plist");
   const SDK = "branch-cordova-sdk";
 
@@ -12,9 +13,17 @@
 
   // updates the platforms/ios/app.plist file with branch settings within app/config.xml
   function addBranchSettings(preferences) {
-    let filePath = `platforms/ios/${preferences.projectName}/${
-      preferences.projectName
-    }-Info.plist`;
+    let filePath;
+
+    if (preferences.iosXcodeCordovaProj) {
+      // Cordova iOS 8+ names the app project folder "App" instead of after config.xml's <name>
+      const projName = path.basename(preferences.iosXcodeCordovaProj);
+      filePath = path.join(preferences.iosXcodeCordovaProj, `${projName}-Info.plist`);
+    } else {
+      filePath = `platforms/ios/${preferences.projectName}/${
+        preferences.projectName
+      }-Info.plist`;
+    }
 
     if (!fs.existsSync(filePath)) {
         filePath = `platforms/ios/App/App-Info.plist`;
