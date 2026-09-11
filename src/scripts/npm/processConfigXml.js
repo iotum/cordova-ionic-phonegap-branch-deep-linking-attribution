@@ -165,7 +165,10 @@
       const CordovaIos = require("cordova-ios");
       const EventEmitter = require("events");
       const iosProject = new CordovaIos("ios", platformPath, new EventEmitter());
-      return iosProject.locations.xcodeCordovaProj;
+      const appProj = iosProject.locations && iosProject.locations.xcodeAppProj;
+      if (!appProj) return null;
+      const appName = path.basename(appProj, ".xcodeproj");
+      return path.join(platformPath, appName);
     } catch (e) {
       return null;
     }
