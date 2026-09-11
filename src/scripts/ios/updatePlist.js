@@ -2,6 +2,7 @@
   // properties
 
   const fs = require("fs");
+  const path = require("path");
   const plist = require("plist");
   const SDK = "branch-cordova-sdk";
 
@@ -12,9 +13,25 @@
 
   // updates the platforms/ios/app.plist file with branch settings within app/config.xml
   function addBranchSettings(preferences) {
-    let filePath = `platforms/ios/${preferences.projectName}/${
-      preferences.projectName
-    }-Info.plist`;
+    let filePath;
+
+    if (preferences.iosProjectModule && preferences.iosProjectModule.xcode) {
+      const projectFolderName = path.basename(
+        path.dirname(preferences.iosProjectModule.xcode.filepath),
+        ".xcodeproj"
+      );
+      filePath = path.join(
+        preferences.projectRoot,
+        "platforms",
+        "ios",
+        projectFolderName,
+        `${projectFolderName}-Info.plist`
+      );
+    } else {
+      filePath = `platforms/ios/${preferences.projectName}/${
+        preferences.projectName
+      }-Info.plist`;
+    }
 
     if (!fs.existsSync(filePath)) {
         filePath = `platforms/ios/App/App-Info.plist`;

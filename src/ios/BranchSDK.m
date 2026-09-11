@@ -16,12 +16,23 @@ NSString * const pluginVersion = @"6.6.1";
 {
   self.branchUniversalObjArray = [[NSMutableArray alloc] init];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleOpenURLNotification:) name:CDVPluginHandleOpenURLNotification object:nil];
+  // cordova-ios 8's scene lifecycle routes Universal Links through CDVSceneDelegate, which only posts this notification (it no longer reaches AppDelegate's continueUserActivity:).
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleContinueUserActivityNotification:) name:CDVPluginContinueUserActivityNotification object:nil];
 }
 
 - (void)handleOpenURLNotification:(NSNotification*)notification
 {
     NSURL* url = [notification object];
     [[Branch getInstance] application:[UIApplication sharedApplication]  openURL:url options:@{}];
+}
+
+- (void)handleContinueUserActivityNotification:(NSNotification*)notification
+{
+    NSUserActivity* userActivity = [notification object];
+    if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
+        self.deepLinkUrl = [userActivity.webpageURL absoluteString];
+    }
+    [[Branch getInstance] continueUserActivity:userActivity];
 }
 
 #pragma mark - Private APIs

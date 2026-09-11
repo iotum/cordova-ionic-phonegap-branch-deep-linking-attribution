@@ -14,7 +14,9 @@
 #import <BranchSDK/BranchUniversalObject.h>
 #endif
 
-#import <Cordova/CDV.h>
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import <Cordova/Cordova.h>
 
 @interface BranchSDK : CDVPlugin
 
