@@ -68,7 +68,6 @@
       uriScheme: getBranchValue(branchXml, "uri-scheme"),
       iosBundleId: getBundleId(configXml, "ios"),
       iosProjectModule: getProjectModule(context),
-      iosXcodeCordovaProj: getIosXcodeCordovaProj(context),
       iosTeamRelease: getBranchValue(branchXml, "ios-team-release"), // optional
       iosTeamDebug: getBranchValue(branchXml, "ios-team-debug"), // optional
       androidBundleId: getBundleId(configXml, "android"), // optional
@@ -153,25 +152,6 @@
     }
 
     return output;
-  }
-
-  // read the iOS platform's app project folder (e.g. "App") using the cordova-ios
-  // locations API, since Cordova iOS 8 no longer names it after config.xml's <name>
-  function getIosXcodeCordovaProj(context) {
-    const projectRoot = getProjectRoot(context);
-    const platformPath = path.join(projectRoot, "platforms", "ios");
-
-    try {
-      const CordovaIos = require("cordova-ios");
-      const EventEmitter = require("events");
-      const iosProject = new CordovaIos("ios", platformPath, new EventEmitter());
-      const appProj = iosProject.locations && iosProject.locations.xcodeAppProj;
-      if (!appProj) return null;
-      const appName = path.basename(appProj, ".xcodeproj");
-      return path.join(platformPath, appName);
-    } catch (e) {
-      return null;
-    }
   }
 
   // read iOS project module from cordova context

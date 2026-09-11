@@ -15,10 +15,18 @@
   function addBranchSettings(preferences) {
     let filePath;
 
-    if (preferences.iosXcodeCordovaProj) {
-      // Cordova iOS 8+ names the app project folder "App" instead of after config.xml's <name>
-      const projName = path.basename(preferences.iosXcodeCordovaProj);
-      filePath = path.join(preferences.iosXcodeCordovaProj, `${projName}-Info.plist`);
+    if (preferences.iosProjectModule && preferences.iosProjectModule.xcode) {
+      const projectFolderName = path.basename(
+        path.dirname(preferences.iosProjectModule.xcode.filepath),
+        ".xcodeproj"
+      );
+      filePath = path.join(
+        preferences.projectRoot,
+        "platforms",
+        "ios",
+        projectFolderName,
+        `${projectFolderName}-Info.plist`
+      );
     } else {
       filePath = `platforms/ios/${preferences.projectName}/${
         preferences.projectName
